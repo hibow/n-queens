@@ -82,15 +82,19 @@
       //debugger;
       var numberOfOnes = 0;
       //go over each colum in the row
-      this.get(rowIndex).forEach(function (value) {
+      for (var i = 0; i < this.get(rowIndex).length; i++) {
+        var value = this.get(rowIndex)[i];
         //if more than one cell has values of one then it has conflict
         if (value === 1) {
           numberOfOnes++;
         }
-      });
-      if (numberOfOnes > 1) {
-        return true;
+        if (numberOfOnes > 1) {
+          return true;
+        }
       }
+
+
+
       return false;
     },
 
@@ -151,41 +155,28 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function (majorDiagonalColumnIndexAtFirstRow) {
-      //
-      var numberOfOnes = 0;
+      var index = this.get('n') - 1;
       var currentColInx = majorDiagonalColumnIndexAtFirstRow;
-      //go through all rows starting with column (input)
-      for (var i = 0; i < this.get('n'); i++) {
+      var obj = [];
+      var val;
+
+      for (var i = 0; i <= index; i++) { //TIME COMPLEXITY =  O(n)
+        if (val !== undefined) {
+          currentColInx = val + i;
+          if (currentColInx > index) {
+            break;
+          }
+        }
         if (this.get(i)[currentColInx] === 1) {
-          numberOfOnes++;
-        }
-        //if conflicts return true
-        if (numberOfOnes > 1) {
-          return true;
-        }
-        //increase column number
-        currentColInx++;
-        //check if column is within the range
-        if (currentColInx === this.get('n')) {
-          break;
-        }
-      }
-      numberOfOnes = 0;
-      var currentRowInx = majorDiagonalColumnIndexAtFirstRow;
-      //go through all columns starting at row (input value)
-      for (var j = 0; j < this.get('n'); j++) {
-        if (this.get(currentRowInx)[j] === 1) {
-          numberOfOnes++;
-        }
-        //if conflicts return true
-        if (numberOfOnes > 1) {
-          return true;
-        }
-        //increase row number
-        currentRowInx++;
-        //check if row is within the range
-        if (currentRowInx === this.get('n')) {
-          break;
+          val = this._getFirstRowColumnIndexForMajorDiagonalOn(i, currentColInx);
+          if (obj[val] === undefined) { //TIME COMPLEXITY = O(1)
+            obj[val] = 1; //TIME COMPLEXITY = O(1)
+          } else {
+            obj[val]++; //TIME COMPLEXITY = O(1)
+            if (obj[val] > 1) { //TIME COMPLEXITY = O(1)
+              return true;
+            }
+          }
         }
       }
       return false;
@@ -208,14 +199,40 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function (minorDiagonalColumnIndexAtFirstRow) {
-      //debugger;
-      return false; // fixme
+      var index = this.get('n') - 1;
+      var currentColInx = minorDiagonalColumnIndexAtFirstRow;
+      var obj = [];
+      var val;
+      for (var i = 0; i <= index; i++) {
+        if (val !== undefined) {
+          currentColInx = val - i;
+          if (currentColInx > index) {
+            break;
+          }
+        }
+        if (this.get(i)[currentColInx] === 1) {
+          val = this._getFirstRowColumnIndexForMinorDiagonalOn(i, currentColInx);
+          if (obj[val] === undefined) {
+            obj[val] = 1;
+          } else {
+            obj[val]++;
+            if (obj[val] > 1) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function () {
-      //debugger;
-      return false; // fixme
+      for (var i = 0; i < this.get('n'); i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
@@ -232,3 +249,46 @@
   };
 
 }());
+
+
+
+// hasMajorDiagonalConflictAt: function (majorDiagonalColumnIndexAtFirstRow) {
+//   //
+//   var numberOfOnes = 0;
+//   var currentColInx = majorDiagonalColumnIndexAtFirstRow;
+//   //go through all rows starting with column (input)
+//   for (var i = 0; i < this.get('n'); i++) {
+//     if (this.get(i)[currentColInx] === 1) {
+//       numberOfOnes++;
+//     }
+//     //if conflicts return true
+//     if (numberOfOnes > 1) {
+//       return true;
+//     }
+//     //increase column number
+//     currentColInx++;
+//     //check if column is within the range
+//     if (currentColInx === this.get('n')) {
+//       break;
+//     }
+//   }
+//   numberOfOnes = 0;
+//   var currentRowInx = majorDiagonalColumnIndexAtFirstRow;
+//   //go through all columns starting at row (input value)
+//   for (var j = 0; j < this.get('n'); j++) {
+//     if (this.get(currentRowInx)[j] === 1) {
+//       numberOfOnes++;
+//     }
+//     //if conflicts return true
+//     if (numberOfOnes > 1) {
+//       return true;
+//     }
+//     //increase row number
+//     currentRowInx++;
+//     //check if row is within the range
+//     if (currentRowInx === this.get('n')) {
+//       break;
+//     }
+//   }
+//   return false;
+// },
