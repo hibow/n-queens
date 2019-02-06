@@ -78,6 +78,16 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
+    hasRowValueAt: function (rowIndex) {
+      for (var i = 0; i < this.get(rowIndex).length; i++) {
+        var val = this.get(rowIndex)[i];
+        if (val === 1) {
+          return true;
+        }
+      }
+      return false;
+    },
+
     hasRowConflictAt: function (rowIndex) {
       //debugger;
       var numberOfOnes = 0;
@@ -117,6 +127,15 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
+    hasColValueAt: function (colIndex) {
+      for (var i = 0; i < this.get('n'); i++) {
+        if (this.get(i)[colIndex] === 1) {
+          return true;
+        }
+      }
+      return false;
+    },
+
     hasColConflictAt: function (colIndex) {
       //debugger;
       var numOfOnes = 0;
